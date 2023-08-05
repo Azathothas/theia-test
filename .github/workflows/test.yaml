@@ -30,7 +30,7 @@ jobs:
           Write-Host "ENV_PATH: $env:PATH"
           # Install winfetch
           choco install winfetch -y
-          C:\tools\winfetch
+          refreshenv ; winfetch
           # Install archey4
           pip install archey4
           archey
@@ -45,10 +45,6 @@ jobs:
           # Run the service
           Start-Process -NoNewWindow -FilePath "C:\Program Files\Tailscale\tailscale-ipn.exe"
           Start-Sleep -Seconds 5
-          # TailScale SSH is not supported on windows: https://github.com/tailscale/tailscale/issues/4697
-          # Instead rely on a manual approach
-          #Add-WindowsCapability -Online -Name OpenSSH.Server*
-          choco install openssh -y
           Start-Sleep -Seconds 5
           Start-Process -NoNewWindow -FilePath "C:\Program Files\Tailscale\tailscale.exe" -ArgumentList "up", "--unattended", --hostname="${{ env.THOST }}", --authkey="${{ env.TSKEY }}"
         continue-on-error: true
@@ -56,17 +52,25 @@ jobs:
     #https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=powershell    
       - name: Start SSH 
         run: |      
+         # TailScale SSH is not supported on windows: https://github.com/tailscale/tailscale/issues/4697
+         # Instead rely on a manual approach
+          Add-WindowsCapability -Online -Name OpenSSH.Server*
+          choco install openssh -y
          #Start Service
           Start-Service sshd
+          . "C:\Program Files\OpenSSH-Win64\install-sshd.ps1"
+          . "C:\Program Files\OpenSSH-Win64\ssh-keygen.exe" -A
          #Add Public SSH Key
           Add-Content -Path "$env:USERPROFILE\.ssh\authorized_keys" -Value "$((Invoke-RestMethod -Uri "https://github.com/azathothas.keys").Split("`n")[1])"
          #Allow Passwords 
           $configContent = Get-Content -Path "$env:ProgramData\ssh\sshd_config"
           $configContent = $configContent -replace "#PasswordAuthentication yes", "PasswordAuthentication yes"
           $configContent | Set-Content -Path "$env:ProgramData\ssh\sshd_config"
-          Restart-Service sshd
          #Configure Firewall
+          New-NetFirewallRule -Protocol TCP -LocalPort 22 -Direction Inbound -Action Allow -DisplayName "OpenSSH-Server-In-TCP"
           if (!(Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyContinue | Select-Object Name, Enabled)) {Write-Output "Firewall Rule 'OpenSSH-Server-In-TCP' does not exist, creating it..." New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22} else {Write-Output "Firewall rule 'OpenSSH-Server-In-TCP' has been created and exists."}
+         #Restart SSH
+          Restart-Service sshd
         continue-on-error: true
         
       - name: Breakpoint || Sleep ∞
