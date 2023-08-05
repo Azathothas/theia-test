@@ -1,4 +1,4 @@
-name: 0xf ➼ Login (gh-runner) Windows-Server-2022
+name: 0xf ➼ Debug (gh-runner) Windows-Server-2022
 #Image : https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
 on:
   workflow_dispatch:
