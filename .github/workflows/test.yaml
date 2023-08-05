@@ -8,7 +8,6 @@ env:
   THOST: gh-runner-windows
   WINDOWS_PASSWORD: 0xff_WIN1337f#
   
-
 jobs:
   build:
     runs-on: windows-latest
@@ -46,7 +45,7 @@ jobs:
         continue-on-error: true
         
     #https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=powershell    
-      - name: Start SSH 
+      - name: Configure SSH 
         run: |      
          # TailScale SSH is not supported on windows: https://github.com/tailscale/tailscale/issues/4697
          # Instead rely on a manual approach
@@ -71,19 +70,20 @@ jobs:
           New-NetFirewallRule -Protocol TCP -LocalPort 22 -Direction Outbound -Action Allow -DisplayName "OpenSSH-Server-Out-TCP"
           New-NetFirewallRule -Protocol TCP -LocalPort 22 -Direction Inbound -Action Allow -DisplayName "OpenSSH-Server-In-TCP-EdgeTraversal" -EdgeTraversalPolicy Allow
           if (!(Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyContinue | Select-Object Name, Enabled)) {Write-Output "Firewall Rule 'OpenSSH-Server-In-TCP' does not exist, creating it..." New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22} else {Write-Output "Firewall rule 'OpenSSH-Server-In-TCP' has been created and exists."}
-         #Finally ReStart 
-          #Stop-Process -Name sshd -Force 2>$null
-          #Start-Process -Wait -FilePath "C:\Program Files\OpenSSH-Win64\sshd.exe" -WindowStyle Hidden ; Start-Sleep 5
-          Start-Process -FilePath "C:\Program Files\OpenSSH-Win64\sshd.exe" -WindowStyle Hidden -ArgumentList "-NoNewWindow"
-         #Check 
-          Get-Process -Name sshd   
-        continue-on-error: true
 
       - name: Print Connection Details
         run: |
          #TailScale
          & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false
         continue-on-error: true
-      - name: Breakpoint || Sleep ∞
+        
+      - name: SSH (Breakpoint) || Sleep ∞
         run: |        
-          while ($true) {Start-Sleep -Seconds 1}  
+          #Finally ReStart 
+          #Stop-Process -Name sshd -Force 2>$null
+          Start-Process -Wait -FilePath "C:\Program Files\OpenSSH-Win64\sshd.exe" -WindowStyle Hidden ; Start-Sleep 5
+          #Check 
+          Get-Process -Name sshd   
+          #Sleep
+          while ($true) {Start-Sleep -Seconds 1} 
+        continue-on-error: true 
