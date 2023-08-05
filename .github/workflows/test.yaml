@@ -41,9 +41,8 @@ jobs:
           Start-Process -Wait -FilePath ".\tailscale-setup.exe" -ArgumentList "/install", "/quiet"
           # Run the service
           Start-Process -NoNewWindow -FilePath "C:\Program Files\Tailscale\tailscale-ipn.exe"
-          Start-Sleep -Seconds 5
+          Start-Sleep -Seconds 2
           Start-Process -NoNewWindow -FilePath "C:\Program Files\Tailscale\tailscale.exe" -ArgumentList "up", "--unattended", --hostname="${{ env.THOST }}", --authkey="${{ env.TSKEY }}"
-          Start-Sleep -Seconds 5
         continue-on-error: true
         
     #https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=powershell    
