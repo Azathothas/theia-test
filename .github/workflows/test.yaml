@@ -44,7 +44,6 @@ jobs:
           Start-Sleep -Seconds 5
           Start-Process -NoNewWindow -FilePath "C:\Program Files\Tailscale\tailscale.exe" -ArgumentList "up", "--unattended", --hostname="${{ env.THOST }}", --authkey="${{ env.TSKEY }}"
           Start-Sleep -Seconds 5
-          & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false
         continue-on-error: true
         
     #https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=powershell    
@@ -61,12 +60,14 @@ jobs:
           Start-Sleep 5
          #Fix Perms 
           #https://github.com/PowerShell/Win32-OpenSSH/wiki/OpenSSH-utility-scripts-to-fix-file-permissions
-          echo "A" > input.txt
-          Start-Process powershell -ArgumentList "-ExecutionPolicy Bypass -File 'C:\Program Files\OpenSSH-Win64\FixHostFilePermissions.ps1" -RedirectStandardInput input.txt
-          Start-Process powershell -ArgumentList "-ExecutionPolicy Bypass -File 'C:\Program Files\OpenSSH-Win64\FixUserFilePermissions.ps1'" -RedirectStandardInput input.txt
+          . "C:\Program Files\OpenSSH-Win64\FixHostFilePermissions.ps1" -Confirm:$false
+          . "C:\Program Files\OpenSSH-Win64\FixUserFilePermissions.ps1" -Confirm:$false
          #Add Public SSH Key
           Add-Content -Path "$env:USERPROFILE\.ssh\authorized_keys" -Value "$((Invoke-RestMethod -Uri "https://github.com/azathothas.keys").Split("`n")[1])"
          #Allow Passwords 
+          Write-Host "hhh"
+          Get-Content -Path "$env:ProgramData\ssh\sshd_config" 
+          Start-Sleep 5
           $configContent = Get-Content -Path "$env:ProgramData\ssh\sshd_config"
           $configContent = $configContent -replace "#PasswordAuthentication yes", "PasswordAuthentication yes"
          #Allow TCP Forwarding 
@@ -85,6 +86,13 @@ jobs:
          #Check 
           Get-Process -Name sshd   
         continue-on-error: true
+
+      - name: Print Connection Details
+        run: |
+         #TailScale
+        & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false
+        continue-on-error: true
+        
       - name: Breakpoint || Sleep ∞
         run: |        
           while ($true) {Start-Sleep -Seconds 1}  
