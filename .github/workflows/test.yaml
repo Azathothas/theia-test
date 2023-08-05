@@ -90,7 +90,7 @@ jobs:
       - name: Print Connection Details
         run: |
          #TailScale
-        & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false
+         & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false
         continue-on-error: true
         
       - name: Breakpoint || Sleep ∞
