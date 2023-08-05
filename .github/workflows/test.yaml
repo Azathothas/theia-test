@@ -44,7 +44,7 @@ jobs:
           Start-Sleep -Seconds 5
           Start-Process -NoNewWindow -FilePath "C:\Program Files\Tailscale\tailscale.exe" -ArgumentList "up", "--unattended", --hostname="${{ env.THOST }}", --authkey="${{ env.TSKEY }}"
           Start-Sleep -Seconds 5
-          "C:\Program Files\Tailscale\tailscale.exe" status 
+          & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false
         continue-on-error: true
         
     #https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=powershell    
@@ -60,6 +60,7 @@ jobs:
           Start-Process -FilePath "C:\Program Files\OpenSSH-Win64\sshd.exe" -WindowStyle Hidden
           Start-Sleep 5
          #Fix Perms 
+          #https://github.com/PowerShell/Win32-OpenSSH/wiki/OpenSSH-utility-scripts-to-fix-file-permissions
           echo "A" > input.txt
           Start-Process powershell -ArgumentList "-ExecutionPolicy Bypass -File 'C:\Program Files\OpenSSH-Win64\FixHostFilePermissions.ps1" -RedirectStandardInput input.txt
           Start-Process powershell -ArgumentList "-ExecutionPolicy Bypass -File 'C:\Program Files\OpenSSH-Win64\FixUserFilePermissions.ps1'" -RedirectStandardInput input.txt
