@@ -30,7 +30,7 @@ jobs:
           Write-Host "Home: $env:HOMEDRIVE$env:HOMEPATH"
           Write-Host "ENV_PATH: $env:PATH"
           # Run winfetch
-          $scriptContent = (Invoke-WebRequest "https://raw.githubusercontent.com/lptstr/winfetch/master/winfetch.ps1" -UseBasicParsing).Content.Remove(0,1); Invoke-Expression $scriptContent 2>$null
+          Invoke-WebRequest "https://raw.githubusercontent.com/lptstr/winfetch/master/winfetch.ps1" -OutFile ~\.local\bin\winfetch.ps1 -UseBasicParsing ; . "~\.local\bin\winfetch.ps1" 2>$null
         continue-on-error: true
 
       - name: Setup Tailscale
