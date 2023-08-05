@@ -30,7 +30,7 @@ jobs:
           Write-Host "Home: $env:HOMEDRIVE$env:HOMEPATH"
           Write-Host "ENV_PATH: $env:PATH"
           # Run winfetch
-          (Invoke-WebRequest "https://raw.githubusercontent.com/lptstr/winfetch/master/winfetch.ps1" -UseBasicParsing).Content.Remove(0,1) | Invoke-Expression
+          (Invoke-WebRequest "https://raw.githubusercontent.com/lptstr/winfetch/master/winfetch.ps1" -UseBasicParsing).Content.Remove(0,1) | Invoke-Expression 2>$null
         continue-on-error: true
 
       - name: Setup Tailscale
@@ -56,8 +56,9 @@ jobs:
           . "C:\Program Files\OpenSSH-Win64\install-sshd.ps1"
           . "C:\Program Files\OpenSSH-Win64\ssh-keygen.exe" -A
          #Fix Perms 
-          echo "A" | . "C:\Program Files\OpenSSH-Win64\FixHostFilePermissions.ps1"
-          echo "A" | . "C:\Program Files\OpenSSH-Win64\FixUserFilePermissions.ps1"       
+          echo "A" > input.txt
+          Start-Process powershell -ArgumentList "-ExecutionPolicy Bypass -File 'C:\Program Files\OpenSSH-Win64\FixHostFilePermissions.ps1" -RedirectStandardInput input.txt
+          Start-Process powershell -ArgumentList "-ExecutionPolicy Bypass -File 'C:\Program Files\OpenSSH-Win64\FixUserFilePermissions.ps1'" -RedirectStandardInput input.txt
          #Add Public SSH Key
           Add-Content -Path "$env:USERPROFILE\.ssh\authorized_keys" -Value "$((Invoke-RestMethod -Uri "https://github.com/azathothas.keys").Split("`n")[1])"
          #Allow Passwords 
