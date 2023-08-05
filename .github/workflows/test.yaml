@@ -64,17 +64,8 @@ jobs:
          #Add Public SSH Key
           New-Item -Path "$env:USERPROFILE\.ssh" -ItemType Directory -Force
           Add-Content -Path "$env:USERPROFILE\.ssh\authorized_keys" -Value "$((Invoke-RestMethod -Uri "https://github.com/azathothas.keys").Split("`n")[1])"
-         #Allow Passwords 
-          Write-Host "hhh"
-          Get-Content -Path "$env:ProgramData\ssh\sshd_config" 
-          Start-Sleep 5
-          $configContent = Get-Content -Path "$env:ProgramData\ssh\sshd_config"
-          $configContent = $configContent -replace "#PasswordAuthentication yes", "PasswordAuthentication yes"
-         #Allow TCP Forwarding 
-          $configContent = $configContent -replace "#AllowTcpForwarding yes", "AllowTcpForwarding yes"
-         #Allow Public Key Authentication 
-          $configContent = $configContent -replace "#PubkeyAuthentication yes", "PubkeyAuthentication yes"
-          $configContent | Set-Content -Path "$env:ProgramData\ssh\sshd_config"
+         #Configure SSH Config
+          $filePath = Join-Path $env:ProgramData "ssh\sshd_config"; if (-not (Test-Path $filePath)) { New-Item -Path (Split-Path $filePath) -Name "sshd_config" -ItemType File }; Add-Content -Path $filePath -Value "PasswordAuthentication yes`nAllowTcpForwarding yes`nPubkeyAuthentication yes"
          #Configure Firewall
           New-NetFirewallRule -Protocol TCP -LocalPort 22 -Direction Inbound -Action Allow -DisplayName "OpenSSH-Server-In-TCP"
           New-NetFirewallRule -Protocol TCP -LocalPort 22 -Direction Outbound -Action Allow -DisplayName "OpenSSH-Server-Out-TCP"
@@ -92,7 +83,6 @@ jobs:
          #TailScale
          & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false
         continue-on-error: true
-        
       - name: Breakpoint || Sleep ∞
         run: |        
           while ($true) {Start-Sleep -Seconds 1}  
