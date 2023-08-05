@@ -1,0 +1,74 @@
+name: 0xf ➼ Login (gh-runner) Windows-Server-2022
+#Image : https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
+on:
+  workflow_dispatch:
+env:
+  #Authenticate with Ephemeral Key: https://login.tailscale.com/admin/settings/keys
+  TSKEY: tskey-auth-ksYVhg1CNTRL-A5QDDdH66vU2pVMcgBy2wUYwzgL4Sv2F
+  THOST: gh-runner-windows
+  TUSER: runner
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 720  # Adjust the timeout as needed
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Get Sys-Info || Set User
+        run: |
+          # Print Basic Info
+          Write-Host "Current User: $env:USERNAME"
+          # Set a password, usually slight complex so it meets minimum requirments
+          Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "0xff_WIN1337f#" -Force)
+          Write-Host "Current Pass: runneradmin"
+          Write-Host "Is_Admin: $((New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))"
+          Write-Host "Hostname: $env:COMPUTERNAME"
+          Write-Host "Home: $env:HOMEDRIVE$env:HOMEPATH"
+          Write-Host "ENV_PATH: $env:PATH"
+          # Install winfetch
+          choco install winfetch -y
+          C:\tools\winfetch
+          # Install archey4
+          pip install archey4
+          archey
+        continue-on-error: true
+
+      - name: Setup Tailscale
+        run: |
+          # Download the installer
+          Invoke-WebRequest -Uri "https://pkgs.tailscale.com/unstable/tailscale-setup-1.47.36.exe" -OutFile "tailscale-setup.exe"
+          # Set it up
+          Start-Process -Wait -FilePath ".\tailscale-setup.exe" -ArgumentList "/install", "/quiet"
+          # Run the service
+          Start-Process -NoNewWindow -FilePath "C:\Program Files\Tailscale\tailscale-ipn.exe"
+          Start-Sleep -Seconds 5
+          # TailScale SSH is not supported on windows: https://github.com/tailscale/tailscale/issues/4697
+          # Instead rely on a manual approach
+          #Add-WindowsCapability -Online -Name OpenSSH.Server*
+          choco install openssh -y
+          Start-Sleep -Seconds 5
+          Start-Process -NoNewWindow -FilePath "C:\Program Files\Tailscale\tailscale.exe" -ArgumentList "up", "--unattended", --hostname="${{ env.THOST }}", --authkey="${{ env.TSKEY }}"
+        continue-on-error: true
+        
+    #https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=powershell    
+      - name: Start SSH 
+        run: |      
+         #Start Service
+          Start-Service sshd
+         #Add Public SSH Key
+          Add-Content -Path "$env:USERPROFILE\.ssh\authorized_keys" -Value "$((Invoke-RestMethod -Uri "https://github.com/azathothas.keys").Split("`n")[1])"
+         #Allow Passwords 
+          $configContent = Get-Content -Path "$env:ProgramData\ssh\sshd_config"
+          $configContent = $configContent -replace "#PasswordAuthentication yes", "PasswordAuthentication yes"
+          $configContent | Set-Content -Path "$env:ProgramData\ssh\sshd_config"
+          Restart-Service sshd
+         #Configure Firewall
+          if (!(Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyContinue | Select-Object Name, Enabled)) {Write-Output "Firewall Rule 'OpenSSH-Server-In-TCP' does not exist, creating it..." New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22} else {Write-Output "Firewall rule 'OpenSSH-Server-In-TCP' has been created and exists."}
+        continue-on-error: true
+        
+      - name: Breakpoint || Sleep ∞
+        run: |        
+          while ($true) {Start-Sleep -Seconds 1}  
