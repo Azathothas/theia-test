@@ -6,7 +6,8 @@ env:
   #Authenticate with Ephemeral Key: https://login.tailscale.com/admin/settings/keys
   TSKEY: tskey-auth-ksYVhg1CNTRL-A5QDDdH66vU2pVMcgBy2wUYwzgL4Sv2F
   THOST: gh-runner-windows
-  TUSER: runner
+  WINDOWS_PASSWORD: 0xff_WIN1337f#
+  
 
 jobs:
   build:
@@ -21,19 +22,15 @@ jobs:
         run: |
           # Print Basic Info
           Write-Host "Current User: $env:USERNAME"
-          # Set a password, usually slight complex so it meets minimum requirments
-          Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "0xff_WIN1337f#" -Force)
-          Write-Host "Current Pass: runneradmin"
+          # Set a password, usually slight complex so it meets minimum requirements
+          Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "${{ env.WINDOWS_PASSWORD }}" -Force)
+          Write-Host "Current Pass: ${{ env.WINDOWS_PASSWORD }}"
           Write-Host "Is_Admin: $((New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))"
           Write-Host "Hostname: $env:COMPUTERNAME"
           Write-Host "Home: $env:HOMEDRIVE$env:HOMEPATH"
           Write-Host "ENV_PATH: $env:PATH"
-          # Install winfetch
-          choco install winfetch -y
-          #refreshenv ; winfetch
-          # Install archey4
-          #pip install archey4
-          #archey
+          # Run winfetch
+          (Invoke-WebRequest "https://raw.githubusercontent.com/lptstr/winfetch/master/winfetch.ps1" -UseBasicParsing).Content.Remove(0,1) | Invoke-Expression
         continue-on-error: true
 
       - name: Setup Tailscale
