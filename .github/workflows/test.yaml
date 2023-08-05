@@ -63,6 +63,7 @@ jobs:
           . "C:\Program Files\OpenSSH-Win64\FixHostFilePermissions.ps1" -Confirm:$false
           . "C:\Program Files\OpenSSH-Win64\FixUserFilePermissions.ps1" -Confirm:$false
          #Add Public SSH Key
+          New-Item -Path "$env:USERPROFILE\.ssh" -ItemType Directory -Force
           Add-Content -Path "$env:USERPROFILE\.ssh\authorized_keys" -Value "$((Invoke-RestMethod -Uri "https://github.com/azathothas.keys").Split("`n")[1])"
          #Allow Passwords 
           Write-Host "hhh"
