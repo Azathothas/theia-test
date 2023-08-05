@@ -53,14 +53,26 @@ jobs:
           Add-WindowsCapability -Online -Name OpenSSH.Server*
           choco install openssh -y
          #Start Service
-         # Start-Service sshd
           . "C:\Program Files\OpenSSH-Win64\install-sshd.ps1"
           . "C:\Program Files\OpenSSH-Win64\ssh-keygen.exe" -A
+         #Fix Perms 
+          echo "A" | . "C:\Program Files\OpenSSH-Win64\FixHostFilePermissions.ps1"
+          echo "A" | . "C:\Program Files\OpenSSH-Win64\FixUserFilePermissions.ps1"
+         #Finally Start 
+          Start-Process -FilePath "C:\Program Files\OpenSSH-Win64\sshd.exe" -WindowStyle Hidden
+          # To kill it
+          #Stop-Process -Name sshd -Force
+         #Check 
+          Get-Process -Name sshd          
          #Add Public SSH Key
           Add-Content -Path "$env:USERPROFILE\.ssh\authorized_keys" -Value "$((Invoke-RestMethod -Uri "https://github.com/azathothas.keys").Split("`n")[1])"
          #Allow Passwords 
           $configContent = Get-Content -Path "$env:ProgramData\ssh\sshd_config"
           $configContent = $configContent -replace "#PasswordAuthentication yes", "PasswordAuthentication yes"
+         #Allow TCP Forwarding 
+          $configContent = $configContent -replace "#AllowTcpForwarding yes", "AllowTcpForwarding yes"
+         #Allow Public Key Authentication 
+          $configContent = $configContent -replace "#PubkeyAuthentication yes", "PubkeyAuthentication yes"
           $configContent | Set-Content -Path "$env:ProgramData\ssh\sshd_config"
          #Configure Firewall
           New-NetFirewallRule -Protocol TCP -LocalPort 22 -Direction Inbound -Action Allow -DisplayName "OpenSSH-Server-In-TCP"
