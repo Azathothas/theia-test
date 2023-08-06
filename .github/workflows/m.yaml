@@ -1,4 +1,4 @@
-name: 0xf ➼ Debug (gh-runner) macOS-13-XL
+name: 0xf ➼ Debug (gh-runner) macOS-13
 #Image: https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ env:
   
 jobs:
   build:
-    runs-on: macos-13-xl
+    runs-on: macos-13
     #Default Timeout= 6 Hr (360 Mins) : https://nesin.io/blog/github-action-timeout
     #Docs: https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration
     timeout-minutes: 690000 
