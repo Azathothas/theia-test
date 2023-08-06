@@ -80,14 +80,14 @@ jobs:
         run: |
          # TailScale --> Check Authentication
          Write-Host "`n"
-         while ($true) { $backendState = & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | jq -r '.BackendState'; if ($backendState -eq 'NeedsLogin') { Write-Host "Please Approve this device on 'https://login.tailscale.com/admin/machines'"; Start-Sleep -Seconds 5 } elseif ($backendState -eq 'Running' -or $backendState -eq 'NeedsMachineAuth') { Write-Host "Successfully Authenticated"; break } else { Write-Host "Unknown state: $backendState"; break } }
+         while ($true) { $backendState = & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | jq -r '.BackendState'; if ($backendState -eq 'NeedsLogin' -or $backendState -eq 'NeedsMachineAuth') { Write-Host "Please Approve this device on 'https://login.tailscale.com/admin/machines'"; Start-Sleep -Seconds 5 } elseif ($backendState -eq 'Running') { Write-Host "Successfully Authenticated"; break } else { Write-Host "Unknown state: $backendState"; break } }
          Write-Host "`n"
          # TailScale --> Print SSH MagicDNS
          # & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | jq -r '"SSH: ssh \(.Self.HostName|gsub(" "; "_"))@\(.Self.DNSName)"'
-         & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | Out-String | ConvertFrom-Json | ForEach-Object { "SSH: ssh $($_.Self.HostName -replace ' ', '_')@$($_.Self.DNSName)" }
+         & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | Out-String | ConvertFrom-Json | ForEach-Object { "SSH: ssh runneradmin@$($_.Self.DNSName)" }
          # TailScale --> Print SSH TailscaleIP
          # & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | jq -r '"SSH: ssh \(.Self.HostName | gsub(" "; "_"))@\(.Self.TailscaleIPs[0])"'
-         & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | Out-String | ConvertFrom-Json | ForEach-Object { "SSH: ssh $($_.Self.HostName -replace ' ', '_')@$($_.Self.TailscaleIps[0])" }
+         & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | Out-String | ConvertFrom-Json | ForEach-Object { "SSH: ssh runneradmin@$($_.Self.TailscaleIps[0])" }
          # TaiScale netcheck
          Write-Host "`n"
          & "C:\Program Files\Tailscale\tailscale.exe" netcheck | Write-Host -ForegroundColor Green
