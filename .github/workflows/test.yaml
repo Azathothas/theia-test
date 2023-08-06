@@ -55,7 +55,7 @@ jobs:
          # TailScale SSH is not supported on windows: https://github.com/tailscale/tailscale/issues/4697
          # Instead rely on a manual approach
           Add-WindowsCapability -Online -Name OpenSSH.Server*
-          choco install openssh -y
+          choco install openssh -y | Out-Null
          #Start Service
           . "C:\Program Files\OpenSSH-Win64\install-sshd.ps1"
           . "C:\Program Files\OpenSSH-Win64\ssh-keygen.exe" -A
@@ -80,7 +80,7 @@ jobs:
         run: |
          # TailScale --> Check Authentication
          Write-Host "`n"
-         while ($true) { $backendState = "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | jq -r '.BackendState'; if ($backendState -eq 'NeedsLogin') { Write-Host "Please Approve this device on 'https://login.tailscale.com/admin/machines'"; Start-Sleep -Seconds 5 } elseif ($backendState -eq 'Running') { Write-Host "Successfully Authenticated"; break } else { Write-Host "Unknown state: $backendState"; break } }
+         while ($true) { $backendState = & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | jq -r '.BackendState'; if ($backendState -eq 'NeedsLogin') { Write-Host "Please Approve this device on 'https://login.tailscale.com/admin/machines'"; Start-Sleep -Seconds 5 } elseif ($backendState -eq 'Running') { Write-Host "Successfully Authenticated"; break } else { Write-Host "Unknown state: $backendState"; break } }
          Write-Host "`n"
          # TailScale --> Print SSH MagicDNS
          & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | jq -r '"SSH: ssh \(.Self.HostName|gsub(" "; "_"))@\(.Self.DNSName)"'
