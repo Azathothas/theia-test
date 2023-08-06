@@ -36,7 +36,7 @@ jobs:
           Write-Host -ForegroundColor Blue "ENV_PATH: $env:PATH`n"
           # Run fastfetch
           Invoke-WebRequest -Uri "https://github.com/fastfetch-cli/fastfetch/releases/download/1.12.2/fastfetch-1.12.2-Win64.zip" -OutFile "C:\tools\fastfetch.zip"; Expand-Archive -Path "C:\tools\fastfetch.zip" -DestinationPath "C:\tools\fastfetch" -Force | Out-Null
-          $output = & "C:\tools\fastfetch\fastfetch.exe" --logo "windows" --logo-padding-top 8 --structure "Break:Break:Title:Separator:Icons:OS:Host:Kernel:Uptime:DateTime:Shell:CPU:CPUUSage:Processes:GPU:Memory:Disk:Packages:Display:DE:WM:WMTheme:Theme:Icons:Font:Cursor:Terminal:TerminalFont:Battery:PowerAdapter:Locale:LocalIP:PublicIP:Break:Colors:Break:Break" --publicip-url v4.ident.me
+          & "C:\tools\fastfetch\fastfetch.exe" --logo "windows" --logo-padding-top 8 --structure "Break:Break:Title:Separator:Icons:OS:Host:Kernel:Uptime:DateTime:Shell:CPU:CPUUSage:Processes:GPU:Memory:Disk:Packages:Display:DE:WM:WMTheme:Theme:Icons:Font:Cursor:Terminal:TerminalFont:Battery:PowerAdapter:Locale:LocalIP:PublicIP:Break:Colors:Break:Break" --publicip-url v4.ident.me
           Write-Host $output  
         continue-on-error: true
 
@@ -91,12 +91,12 @@ jobs:
          while ($true) { $backendState = & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | jq -r '.BackendState'; if ($backendState -eq 'NeedsLogin' -or $backendState -eq 'NeedsMachineAuth') { Write-Host "Please Approve this device on 'https://login.tailscale.com/admin/machines'"; Start-Sleep -Seconds 5 } elseif ($backendState -eq 'Running') { Write-Host "Successfully Authenticated`n"; break } else { Write-Host "Unknown state: $backendState"; break } }
          Write-Host "`n"
          # TailScale --> Print RDP MagicDNS
-         #& "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | Out-String | ConvertFrom-Json | ForEach-Object { "RDP --> [runneradmin:${{ env.WINDOWS_PASSWORD }}] (Hostname:$($_.Self.DNSName.TrimEnd('.'))) (Port:3389)" }
-         & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | Out-String | ConvertFrom-Json | ForEach-Object { 'RDP --> [runneradmin:${{ env.WINDOWS_PASSWORD }}] (Hostname:{0}) (Port:3389)' -f $_.Self.DNSName.TrimEnd('.') }
-         & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | Out-String | ConvertFrom-Json | ForEach-Object { "RDP --> [runneradmin:${{ env.WINDOWS_PASSWORD }}] (Hostname:$($_.Self.TailscaleIps[0])) (Port:3389)" }
+         & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | Out-String | ConvertFrom-Json | ForEach-Object { "RDP --> (runneradmin:${{ env.WINDOWS_PASSWORD }}) (Hostname:$($_.Self.DNSName.TrimEnd('.'))) (Port:3389)" }
+         #& "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | Out-String | ConvertFrom-Json | ForEach-Object { 'RDP --> [runneradmin:${{ env.WINDOWS_PASSWORD }}] (Hostname:{0}) (Port:3389)' -f $_.Self.DNSName.TrimEnd('.') }
+         & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | Out-String | ConvertFrom-Json | ForEach-Object { "RDP --> (runneradmin:${{ env.WINDOWS_PASSWORD }}) (Hostname:$($_.Self.TailscaleIps[0])) (Port:3389)" }
          # TailScale --> Print SSH MagicDNS
          # & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | jq -r '"SSH: ssh \(.Self.HostName|gsub(" "; "_"))@\(.Self.DNSName)"'
-         & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | Out-String | ConvertFrom-Json | ForEach-Object { "SSH --> ssh runneradmin@$($_.Self.DNSName.TrimEnd('.'))" [Password:${{ env.WINDOWS_PASSWORD }}] }
+         & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | Out-String | ConvertFrom-Json | ForEach-Object { "SSH --> ssh runneradmin@$($_.Self.DNSName.TrimEnd('.'))" (Password:${{ env.WINDOWS_PASSWORD }}) }
          # TailScale --> Print SSH TailscaleIP
          # & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | jq -r '"SSH: ssh \(.Self.HostName | gsub(" "; "_"))@\(.Self.TailscaleIPs[0])"'
          & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | Out-String | ConvertFrom-Json | ForEach-Object { "SSH --> ssh runneradmin@$($_.Self.TailscaleIps[0])" [Password:${{ env.WINDOWS_PASSWORD }}] }
