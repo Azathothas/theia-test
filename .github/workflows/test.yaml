@@ -32,7 +32,7 @@ jobs:
           tzutil /s "Nepal Standard Time"
           Write-Host -ForegroundColor Green "DateTime: $((Get-Date).ToString("yyyy-MM-dd hh:mm:ss tt"))"
           Write-Host "`n"
-          Write-Host -ForegroundColor Blue "ENV_PATH: $env:PATH"
+          Write-Host -ForegroundColor Blue "ENV_PATH: $env:PATH`n"
           # Run winfetch
           #(Invoke-WebRequest "https://raw.githubusercontent.com/lptstr/winfetch/master/winfetch.ps1" -UseBasicParsing).Content.Remove(0,1) | Invoke-Expression 2>$null
         continue-on-error: true
@@ -80,7 +80,7 @@ jobs:
         run: |
          # TailScale --> Check Authentication
          Write-Host "`n"
-         while ($true) { $backendState = & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | jq -r '.BackendState'; if ($backendState -eq 'NeedsLogin' -or $backendState -eq 'NeedsMachineAuth') { Write-Host "Please Approve this device on 'https://login.tailscale.com/admin/machines'"; Start-Sleep -Seconds 5 } elseif ($backendState -eq 'Running') { Write-Host "Successfully Authenticated"; break } else { Write-Host "Unknown state: $backendState"; break } }
+         while ($true) { $backendState = & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | jq -r '.BackendState'; if ($backendState -eq 'NeedsLogin' -or $backendState -eq 'NeedsMachineAuth') { Write-Host "Please Approve this device on 'https://login.tailscale.com/admin/machines'"; Start-Sleep -Seconds 5 } elseif ($backendState -eq 'Running') { Write-Host "Successfully Authenticated`n"; break } else { Write-Host "Unknown state: $backendState"; break } }
          Write-Host "`n"
          # TailScale --> Print SSH MagicDNS
          # & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | jq -r '"SSH: ssh \(.Self.HostName|gsub(" "; "_"))@\(.Self.DNSName)"'
