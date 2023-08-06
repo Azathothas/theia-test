@@ -26,6 +26,7 @@ jobs:
           
       - name: Setup Tailscale
         run: |
+          #Install go
           bash <(curl -qfsSL "https://git.io/go-installer")
           find "$HOME" -maxdepth 1 -name 'go*.gz' -type f -delete
           export PATH=$HOME/.go/bin:$HOME/go/bin:$PATH
@@ -42,7 +43,6 @@ jobs:
           SSH_IP=$(sudo $HOME/go/bin/tailscale ip -4 | tr -d '\n')
           ssh_connection_string="SSH: ssh $USER@$SSH_IP"
           echo -e "$ssh_connection_string"
-          sleep 60s
           #Also shows up on: https://login.tailscale.com/admin/machines
       
       # - name: Install CoreUtils
