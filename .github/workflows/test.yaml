@@ -20,6 +20,7 @@ jobs:
       - name: Get Sys-Info || Set User
         run: |
           # Print Basic Info
+          Write-Host "`n"
           Write-Host "Current User: $env:USERNAME"
           # Set a password, usually slight complex so it meets minimum requirements
           Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "${{ env.WINDOWS_PASSWORD }}" -Force)
@@ -27,6 +28,10 @@ jobs:
           Write-Host "Is_Admin: $((New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))"
           Write-Host "Hostname: $env:COMPUTERNAME"
           Write-Host "Home: $env:HOMEDRIVE$env:HOMEPATH"
+          # Change the Timezone
+          tzutil /s "Nepal Standard Time"
+          Write-Host "DateTime: $((Get-Date).ToString("yyyy-MM-dd hh:mm:ss tt"))"
+          Write-Host "`n"
           Write-Host "ENV_PATH: $env:PATH"
           # Run winfetch
           #(Invoke-WebRequest "https://raw.githubusercontent.com/lptstr/winfetch/master/winfetch.ps1" -UseBasicParsing).Content.Remove(0,1) | Invoke-Expression 2>$null
@@ -73,8 +78,21 @@ jobs:
 
       - name: Print Connection Details
         run: |
-         #TailScale
-         & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false
+         # TailScale --> Check Authentication
+         Write-Host "`n"
+         while ($true) { $backendState = tailscale status --peers=false --json | jq -r '.BackendState'; if ($backendState -eq 'NeedsLogin') { Write-Host "Please Approve this device on 'https://login.tailscale.com/admin/machines'"; Start-Sleep -Seconds 5 } elseif ($backendState -eq 'Running') { Write-Host "Successfully Authenticated"; break } else { Write-Host "Unknown state: $backendState"; break } }
+         Write-Host "`n"
+         # TailScale --> Print SSH MagicDNS
+         & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | jq -r '"SSH: ssh \(.Self.HostName|gsub(" "; "_"))@\(.Self.DNSName)"'
+         # TailScale --> Print SSH TailscaleIP
+         & "C:\Program Files\Tailscale\tailscale.exe" status --peers=false --json | jq -r '"SSH: ssh \(.Self.HostName | gsub(" "; "_"))@\(.Self.TailscaleIPs[0])"'
+         # TaiScale netcheck
+         Write-Host "`n"
+         & "C:\Program Files\Tailscale\tailscale.exe" netcheck
+         # IpInfo
+         Write-Host "`n"
+         (Invoke-WebRequest -Uri 'http://ip-api.com/json/' -UseBasicParsing).Content | ConvertFrom-Json
+         Write-Host "`n"
         continue-on-error: true
         
       - name: SSH (Breakpoint) || Sleep ∞
