@@ -31,8 +31,8 @@ jobs:
           export PATH=$HOME/.go/bin:$HOME/go/bin:$PATH
           "$HOME/.go/bin/go" clean -modcache
           # https://github.com/tailscale/tailscale/wiki/Tailscaled-on-macOS
-          "$HOME/.go/bin/go" install -v tailscale.com/cmd/tailscale
-          "$HOME/.go/bin/go" install -v tailscale.com/cmd/tailscaled
+          "$HOME/.go/bin/go" install -v tailscale.com/cmd/tailscale@main
+          "$HOME/.go/bin/go" install -v tailscale.com/cmd/tailscaled@main
           sudo $HOME/go/bin/tailscaled --tun=userspace-networking --socks5-server=localhost:9025 --outbound-http-proxy-listen=localhost:9025 &
           #Authenticate with Ephemeral Key: https://login.tailscale.com/admin/settings/keys
           sudo $HOME/go/bin/tailscale up --ssh --hostname="${{ env.THOST }}" --authkey="${{ env.TSKEY }}" 
