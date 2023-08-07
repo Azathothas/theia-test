@@ -7,7 +7,7 @@ on:
   workflow_dispatch:   # This event allows manual triggering
 
 jobs:
-  build:
+  linux_builder:
     runs-on: ubuntu-latest
     
     steps:
@@ -19,7 +19,7 @@ jobs:
           echo "Building on Ubuntu"
           uname -a
 
-  test:
+  macos_builder:
     runs-on: macos-latest
     
     steps:
@@ -28,5 +28,5 @@ jobs:
       
       - name: Test on macOS
         run: |
-          echo "Testing on macOS"
-          uname -a
+          brew install go
+          go -h
