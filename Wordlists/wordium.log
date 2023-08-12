@@ -1,169 +1,0 @@
-
-        ╭┳╮
-╭┳┳┳━┳┳┳╯┣╋┳┳━━╮
-┃W┃O┃R╭┫D┃I┃U┃M┃
-╰━━┻━┻╯╰━┻┻━┻┻┻╯
-
-➼ Specified Wordlist Directory: /tmp/Wordlists
-
-Detected platform: linux_amd64
-Latest Version: 1.3.3
-Downloading https://github.com/zyedidia/eget/releases/download/v1.3.3/eget-1.3.3-linux_amd64.tar.gz
-eget-1.3.3-linux_amd64/eget
-Eget has been downloaded to the current directory.
-You can run it with:
-./eget
-➼ anew is not installed. Installing...
-➼ dos2unix is not installed. Installing...
-Hit:1 http://azure.archive.ubuntu.com/ubuntu jammy InRelease
-Get:2 http://azure.archive.ubuntu.com/ubuntu jammy-updates InRelease [119 kB]
-Get:3 http://azure.archive.ubuntu.com/ubuntu jammy-backports InRelease [109 kB]
-Get:4 http://azure.archive.ubuntu.com/ubuntu jammy-security InRelease [110 kB]
-Get:5 https://packages.microsoft.com/ubuntu/22.04/prod jammy InRelease [3611 B]
-Get:6 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]
-Get:7 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
-Get:8 http://azure.archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [873 kB]
-Get:9 http://azure.archive.ubuntu.com/ubuntu jammy-updates/main Translation-en [212 kB]
-Get:10 http://azure.archive.ubuntu.com/ubuntu jammy-updates/main amd64 c-n-f Metadata [15.6 kB]
-Get:11 http://azure.archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [678 kB]
-Get:12 http://azure.archive.ubuntu.com/ubuntu jammy-updates/restricted Translation-en [108 kB]
-Get:13 http://azure.archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [965 kB]
-Get:14 http://azure.archive.ubuntu.com/ubuntu jammy-updates/universe Translation-en [210 kB]
-Get:15 http://azure.archive.ubuntu.com/ubuntu jammy-updates/universe amd64 c-n-f Metadata [21.5 kB]
-Get:16 http://azure.archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [41.6 kB]
-Hit:17 https://ppa.launchpadcontent.net/ubuntu-toolchain-r/test/ubuntu jammy InRelease
-Get:18 http://azure.archive.ubuntu.com/ubuntu jammy-security/main amd64 Packages [664 kB]
-Get:19 http://azure.archive.ubuntu.com/ubuntu jammy-security/main Translation-en [154 kB]
-Get:20 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [119 kB]
-Get:21 http://azure.archive.ubuntu.com/ubuntu jammy-security/main amd64 c-n-f Metadata [11.2 kB]
-Get:22 http://azure.archive.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [667 kB]
-Get:23 http://azure.archive.ubuntu.com/ubuntu jammy-security/restricted Translation-en [106 kB]
-Get:24 http://azure.archive.ubuntu.com/ubuntu jammy-security/restricted amd64 c-n-f Metadata [536 B]
-Get:25 http://azure.archive.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [770 kB]
-Get:26 http://azure.archive.ubuntu.com/ubuntu jammy-security/universe Translation-en [140 kB]
-Get:27 http://azure.archive.ubuntu.com/ubuntu jammy-security/universe amd64 c-n-f Metadata [16.4 kB]
-Get:28 https://packages.microsoft.com/ubuntu/22.04/prod jammy/main arm64 Packages [17.9 kB]
-Get:29 https://packages.microsoft.com/ubuntu/22.04/prod jammy/main armhf Packages [8877 B]
-Get:30 https://packages.microsoft.com/ubuntu/22.04/prod jammy/main amd64 Packages [85.7 kB]
-Get:31 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [664 kB]
-Get:32 http://archive.ubuntu.com/ubuntu jammy/main amd64 Packages [1395 kB]
-Get:33 http://security.ubuntu.com/ubuntu jammy-security/main Translation-en [154 kB]
-Get:34 http://security.ubuntu.com/ubuntu jammy-security/main amd64 c-n-f Metadata [11.2 kB]
-Get:35 http://archive.ubuntu.com/ubuntu jammy/main Translation-en [510 kB]
-Get:36 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [667 kB]
-Get:37 http://archive.ubuntu.com/ubuntu jammy/main amd64 c-n-f Metadata [30.3 kB]
-Get:38 http://security.ubuntu.com/ubuntu jammy-security/restricted Translation-en [106 kB]
-Get:39 http://archive.ubuntu.com/ubuntu jammy/restricted amd64 Packages [129 kB]
-Get:40 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 c-n-f Metadata [536 B]
-Get:41 http://archive.ubuntu.com/ubuntu jammy/restricted Translation-en [18.6 kB]
-Get:42 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [770 kB]
-Get:43 http://archive.ubuntu.com/ubuntu jammy/restricted amd64 c-n-f Metadata [488 B]
-Get:44 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [873 kB]
-Get:45 http://security.ubuntu.com/ubuntu jammy-security/universe Translation-en [140 kB]
-Get:46 http://archive.ubuntu.com/ubuntu jammy-updates/main Translation-en [212 kB]
-Get:47 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 c-n-f Metadata [16.4 kB]
-Get:48 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [36.5 kB]
-Get:49 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 c-n-f Metadata [15.6 kB]
-Get:50 http://security.ubuntu.com/ubuntu jammy-security/multiverse Translation-en [7060 B]
-Get:51 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [678 kB]
-Get:52 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 c-n-f Metadata [260 B]
-Get:53 http://archive.ubuntu.com/ubuntu jammy-updates/restricted Translation-en [108 kB]
-Get:54 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 c-n-f Metadata [536 B]
-Fetched 13.1 MB in 3s (4659 kB/s)
-Reading package lists...
-Reading package lists...
-Building dependency tree...
-Reading state information...
-The following NEW packages will be installed:
-  dos2unix
-0 upgraded, 1 newly installed, 0 to remove and 42 not upgraded.
-Need to get 384 kB of archives.
-After this operation, 1367 kB of additional disk space will be used.
-Get:1 http://azure.archive.ubuntu.com/ubuntu jammy/universe amd64 dos2unix amd64 7.4.2-2 [384 kB]
-Fetched 384 kB in 0s (10.7 MB/s)
-Selecting previously unselected package dos2unix.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 222519 files and directories currently installed.)
-Preparing to unpack .../dos2unix_7.4.2-2_amd64.deb ...
-Unpacking dos2unix (7.4.2-2) ...
-Setting up dos2unix (7.4.2-2) ...
-Processing triggers for man-db (2.10.2-1) ...
-NEEDRESTART-VER: 3.5
-NEEDRESTART-KCUR: 5.15.0-1042-azure
-NEEDRESTART-KEXP: 5.15.0-1042-azure
-NEEDRESTART-KSTA: 1
-✗ Error: /tmp/Wordlists/bbFuzzing.txt/bbFuzzing.txt not found
-Reinstalling....
-
-✗ Error: /tmp/Wordlists/bbFuzzing.txt not found
-This will take quite some time (If first run)
-Depending on your internet, it may take upto 1 hr
-Just let your terminal be!
-No Git (.git) folder found in /tmp/Wordlists or its parent directories!
-Proceeding with git clone
-
-Updating /tmp/Wordlists/bbFuzzing.txt to @latest
-ⓘ Already @latest
-Updating /tmp/Wordlists/fuzz.txt to @latest
-ⓘ Already @latest
-Updating /tmp/Wordlists/hfuzz to @latest
-ⓘ Already @latest
-Updating /tmp/Wordlists/leaky-paths to @latest
-ⓘ Already @latest
-Updating /tmp/Wordlists/OneListForAll to @latest
-ⓘ Already @latest
-Updating /tmp/Wordlists/WordList to @latest
-ⓘ Already @latest
-
-➼ Fetching & Updating <-- Bo0oM/fuzz.txt
-➼ x_lhf_mini.txt  : 604
-➼ x_lhf_mid.txt  : 5234
-
-➼ Fetching & Updating <-- reewardius/bbFuzzing.txt
-➼ x_lhf_mini.txt  : 3357
-➼ x_lhf_mid.txt   : 24081
-➼ x_lhf_large.txt  : 81556
-
-➼ Fetching & Updating <-- thehlopster/hfuzz
-➼ x_lhf_mini.txt  : 524
-➼ x-lhf-large.tx  : 3903
-
-➼ Fetching & Updating <-- ayoubfathi/leaky-paths
-➼ x_lhf_mini.txt  : 1435
-
-➼ Fetching & Updating <-- Six2dez/OneListForAll
-➼ x_lhf_mini.txt  : 2
-➼ x_lhf_large.txt  : 53521
-➼ x_massive.txt  : 763311
-
-➼ Fetching & Updating <-- rix4uni/WordList
-➼ x_lhf_mini.txt  : 1754 , 0
-➼ x_lhf_mid.txt  : 264
-➼ x_lhf_large.txt  : 11600
-➼ x_massive.txt  : 11470
-
-➼ New Additions 
-➼ x_lhf_mini.txt  : 7676
-➼ x_lhf_mid.txt   : 5443
-➼ x_lhf_large.txt : 3529
-➼ x_massive.txt   : 69357
-
-➼ Generating x_api.txt 
-➼ Newly added: 69619
-
-➼ Generating x_dns.txt 
-➼ Newly added: 57778
-
-➼ Generating x_mini.txt 
-➼ Newly added: 13885
-
-➼Updated Wordlists:
-➼ x_api.txt       : 69619 /tmp/Wordlists/x_api.txt
-➼ x_api_tiny.txt  : 19058 /tmp/Wordlists/x_api_tiny.txt
-➼ x_dns.txt       : 57778 /tmp/Wordlists/x_dns.txt
-➼ x_dns_tiny.txt  : 15425 /tmp/Wordlists/x_dns_tiny.txt
-➼ x_mini.txt      : 13885 /tmp/Wordlists/x_mini.txt
-➼ x_lhf_mini.txt  : 7677 /tmp/Wordlists/x_lhf_mini.txt
-➼ x_lhf_mid.txt   : 35022 /tmp/Wordlists/x_lhf_mid.txt
-➼ x_lhf_large.txt : 154109 /tmp/Wordlists/x_lhf_large.txt
-➼ x_massive.txt   : 844138 /tmp/Wordlists/x_massive.txt
-
