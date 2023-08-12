@@ -20,6 +20,7 @@ jobs:
           
       - name: Setup Env
         run: |
+          pip install ansi2txt
           # Create Output Dir
           mkdir -p "$GITHUB_WORKSPACE/main/Wordlists"
      
@@ -29,9 +30,30 @@ jobs:
           sudo curl -qflSL "https://raw.githubusercontent.com/Azathothas/Utils/main/Binaries/Tools/Arsenal/wordium/wordium.sh" -o "/usr/local/bin/wordium"
           sudo chmod +xwr "/usr/local/bin/wordium"
           #Run
-          wordium --wordlist-dir $GITHUB_WORKSPACE/main/Wordlists
-          #Run again
-          wordium --wordlist-dir $GITHUB_WORKSPACE/main/Wordlists
+          wordium --wordlist-dir $GITHUB_WORKSPACE/main/Wordlists | tee /tmp/wordium.log
+          cat /tmp/wordium.log | ansi2txt > "$GITHUB_WORKSPACE/main/Wordlists/wordium.log"
+          #Run again for logs & stats
+          wordium --wordlist-dir $GITHUB_WORKSPACE/main/Wordlists | tee /tmp/wordium_stat.log
+          cat /tmp/wordium_stat.log | ansi2txt | grep -A999999 "➼Updated Wordlists:" > /tmp/wordium_stat.txt
+        continue-on-error: true
+
+      - name: Update README.md
+        run: |
+           set +e
+           cd "$GITHUB_WORKSPACE/main"
+           cat ./Wordlists/INFO.md > ./Wordlists/README.md
+           echo -e "" >> ./Wordlists/README.md 
+           echo '---' >> ./Wordlists/README.md
+           echo '```console' >> ./Wordlists/README.md
+           echo -e "" >> ./Wordlists/README.md
+           echo -e "--> METADATA" >> ./Wordlists/README.md
+           /bin/bash -c 'PS4="$ "; cat /tmp/wordium_stat.txt '&>> ./Wordlists/README.md
+           echo -e "" >> ./Wordlists/README.md
+           echo -e '```\n' >> ./Wordlists/README.md
+           echo -e "" >> ./Wordlists/README.md
+           echo '---' >> ./Wordlists/README.md
+           echo -e "" >> ./Wordlists/README.md                   
+        working-directory: main
         continue-on-error: true
 
       - name: Get DateTime
