@@ -38,7 +38,7 @@ jobs:
           #wordium --wordlist-dir $GITHUB_WORKSPACE/main/Wordlists | tee /tmp/wordium_stat.log
           cat /tmp/wordium_stat.log | ansi2txt | grep -A999999 "➼Updated Wordlists:" > /tmp/wordium_stat.txt
           # Move to main
-          cp -r /tmp/Wordlists/* $GITHUB_WORKSPACE/main/Wordlists
+          find /tmp/Wordlists -maxdepth 1 -type f -name 'x*.txt' -exec mv {} $GITHUB_WORKSPACE/main/Wordlists/  \;
         continue-on-error: true
 
       - name: Update README.md
