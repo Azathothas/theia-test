@@ -30,11 +30,15 @@ jobs:
           sudo curl -qflSL "https://raw.githubusercontent.com/Azathothas/Utils/main/Binaries/Tools/Arsenal/wordium/wordium.sh" -o "/usr/local/bin/wordium"
           sudo chmod +xwr "/usr/local/bin/wordium"
           #Run
-          wordium --wordlist-dir $GITHUB_WORKSPACE/main/Wordlists | tee /tmp/wordium.log
+          wordium --wordlist-dir /tmp/Wordlists | tee /tmp/wordium.log
+          #wordium --wordlist-dir $GITHUB_WORKSPACE/main/Wordlists | tee /tmp/wordium.log
           cat /tmp/wordium.log | ansi2txt > "$GITHUB_WORKSPACE/main/Wordlists/wordium.log"
           #Run again for logs & stats
-          wordium --wordlist-dir $GITHUB_WORKSPACE/main/Wordlists | tee /tmp/wordium_stat.log
+          wordium --wordlist-dir /tmp/Wordlists | tee /tmp/wordium_stat.log
+          #wordium --wordlist-dir $GITHUB_WORKSPACE/main/Wordlists | tee /tmp/wordium_stat.log
           cat /tmp/wordium_stat.log | ansi2txt | grep -A999999 "➼Updated Wordlists:" > /tmp/wordium_stat.txt
+          # Move to main
+          cp -r /tmp/Wordlists/* $GITHUB_WORKSPACE/main/Wordlists
         continue-on-error: true
 
       - name: Update README.md
