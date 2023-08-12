@@ -1,0 +1,50 @@
+name: 💾 Fetch || ⏫ Update Wordlists 📙
+#MAX_RUNTIME: ~ 02 mins
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */2 * * *"  # Every 2 Hrs
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      
+    steps:        
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          path: main  
+          
+      - name: Setup Env
+        run: |
+          # Create Output Dir
+          mkdir -p "$GITHUB_WORKSPACE/main/Wordlists"
+     
+      - name: Run Wordium
+        run: |
+          #Install
+          sudo curl -qflSL "https://raw.githubusercontent.com/Azathothas/Utils/main/Binaries/Tools/Arsenal/wordium/wordium.sh" -o "/usr/local/bin/wordium"
+          sudo chmod +xwr "/usr/local/bin/wordium"
+          #Run
+          wordium --wordlist-dir $GITHUB_WORKSPACE/main/Wordlists
+          #Run again
+          wordium --wordlist-dir $GITHUB_WORKSPACE/main/Wordlists
+        continue-on-error: true
+
+      - name: Get DateTime
+        if: env.versions_same != 'true'
+        run: |
+          # Date Time
+          NEPALI_TIME=$(TZ='Asia/Kathmandu' date +'%Y-%m-%d (%I:%M:%S %p)')
+          echo "NEPALI_TIME=$NEPALI_TIME" >> $GITHUB_ENV
+        
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          repository: ./main        
+          commit_user_name: Azathothas # defaults to "github-actions[bot]"
+          commit_user_email: AjamX101@gmail.com # defaults to "41898282+github-actions[bot]@users.noreply.github.com"
+          commit_message: "✅ Fetch latest Wordlists 🧲 <-- ${{ env.NEPALI_TIME }} ⌚"
+          #push_options: '--force'
